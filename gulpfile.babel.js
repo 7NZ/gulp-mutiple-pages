@@ -65,7 +65,9 @@ export function styles() {
 export function scripts() {
   return gulp.src(paths.scripts.src, { sourcemaps: true })
     .pipe(babel())
-    .pipe(uglify())
+    .pipe(uglify({
+      compress: isDev ? false : true
+    }))
     .pipe(
       isDev
       ? gulp.dest(paths.scripts.dest)
@@ -82,7 +84,12 @@ export function images() {
     .pipe(
       isDev
       ? gulp.dest(paths.images.dest)
-      : md5(10, [outputPath + '/css/**/*.css', outputPath + '/*.html'], {
+      : md5(10, [
+        // 引入图片的文件
+        outputPath + '/css/**/*.css', 
+        outputPath + '/*.html', 
+        outputPath + '/js/*.js'
+        ], {
         mappingFile: 'manifest.json'
       })
     ).pipe(gulp.dest(paths.images.dest));
@@ -91,13 +98,14 @@ export function images() {
 export function webServer(){ // 本地服务
   return gulp.src( './' + outputPath ) // 服务器目录（.代表根目录）
     .pipe(webserver({ // 运行gulp-webserver
+      host: '0.0.0.0', // 本地访问可用http://localhost:8031，局域网访问输入运行机ip
       port: 8031,
       livereload: true, // 启用LiveReload
       open: false, // 服务器启动时是否自动打开网页
       proxies: [ // 代理
         {
-          source: '/mobao',
-          target: 'http://test.mobaotec.com/mobao',
+          source: '/apis',
+          target: 'http://www.domain.com/apis',
           // options: { headers: {'ABC_HEADER': 'abc'} }
         }
       ]
