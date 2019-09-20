@@ -124,9 +124,9 @@ const dev = gulp.series(
   clean, 
   htmls,
   styles, 
+  scripts, 
   gulp.parallel(
     images, 
-    scripts, 
     copyFiles
   ), 
   webServer, 
@@ -137,9 +137,9 @@ const build = gulp.series(
   clean, 
   htmls, // 顺序很重要，html任务要先执行，否则打包出的html文件里面引入的css,js,img文件不带MD5
   styles, // 同上，css文件里面引入了图片文件，因此需要先执行
+  scripts, 
   gulp.parallel(
     images, 
-    scripts, 
     copyFiles
   ),
 );
